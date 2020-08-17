@@ -68,7 +68,7 @@ void _luax_registertype(lua_State* L, const char* name, const luaL_Reg* function
 
   // Register class functions
   if (functions) {
-    luaL_register(L, NULL, functions);
+    luax_register(L, functions);
   }
 
   // :release function
@@ -175,12 +175,14 @@ void luax_registerloader(lua_State* L, lua_CFunction loader, int index) {
   lua_getglobal(L, "table");
   lua_getfield(L, -1, "insert");
   lua_getglobal(L, "package");
-  lua_getfield(L, -1, "loaders");
+  lua_getfield(L, -1, "searchers");
   lua_remove(L, -2);
   if (lua_istable(L, -1)) {
     lua_pushinteger(L, index);
     lua_pushcfunction(L, loader);
     lua_call(L, 3, 0);
+  } else {
+    lua_pop(L, 3);
   }
   lua_pop(L, 1);
 }

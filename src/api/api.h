@@ -107,11 +107,19 @@ typedef struct {
   void* object;
 } Proxy;
 
-#ifndef LUA_RIDX_MAINTHERAD
+#if LUA_VERSION_NUM > 501
+#define luax_len(L, i) (int) lua_rawlen(L, i)
+#define luax_register(L, f) luaL_setfuncs(L, f, 0)
+#define luax_resume(T, n) lua_resume(T, NULL, n, NULL)
+#else
+#define luax_len(L, i) (int) lua_objlen(L, i)
+#define luax_register(L, f) luaL_register(L, NULL, f)
+#define luax_resume(T, n) lua_resume(T, n)
 #define LUA_RIDX_MAINTHREAD 1
 #endif
 
-#define luax_len(L, i) (int) lua_objlen(L, i)
+#define luaL_typerror luaL_typeerror
+
 #define luax_registertype(L, T) _luax_registertype(L, #T, lovr ## T, lovr ## T ## Destroy)
 #define luax_totype(L, i, T) (T*) _luax_totype(L, i, hash64(#T, strlen(#T)))
 #define luax_checktype(L, i, T) (T*) _luax_checktype(L, i, hash64(#T, strlen(#T)), #T)

@@ -345,7 +345,7 @@ static int l_lovrLightUserdataOp(lua_State* L) {
 
 int luaopen_lovr_math(lua_State* L) {
   lua_newtable(L);
-  luaL_register(L, NULL, lovrMath);
+  luax_register(L, lovrMath);
   luax_registertype(L, Curve);
   luax_registertype(L, RandomGenerator);
 
@@ -353,7 +353,7 @@ int luaopen_lovr_math(lua_State* L) {
     lua_newtable(L);
     lua_pushstring(L, lovrVectorTypeNames[i]);
     lua_setfield(L, -2, "__name");
-    luaL_register(L, NULL, lovrVectorMetatables[i]);
+    luax_register(L, lovrVectorMetatables[i]);
     lovrVectorMetatableRefs[i] = luaL_ref(L, LUA_REGISTRYINDEX);
   }
 
